@@ -12,8 +12,8 @@ import com.dumbster.smtp.SmtpState;
 
 /**
  * An implementation of MailMessage to support lazy load of messages stored in EML files.
- * <br/><br/>
- * Each message is attached to a file but won't load the file until data is requested.<br/>
+ *
+ * Each message is attached to a file but won't load the file until data is requested.
  * This object is detached from the original file, so changes made to this object won't reflect to the file automatically.
  */
 public class EMLMailMessage implements MailMessage {

@@ -1,7 +1,7 @@
 /*
  * Dumbster - a dummy SMTP server
  * Copyright 2004 Jason Paul Kitchen
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -148,7 +148,6 @@ public class SmtpServer implements Runnable {
      * Toggles if the SMTP server is single or multi-threaded for response to
      * SMTP sessions.
      *
-     * @param threaded
      */
     public void setThreaded(boolean threaded) {
         this.threaded = threaded;
