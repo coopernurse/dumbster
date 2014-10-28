@@ -3,23 +3,37 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.github.rjo1970</groupId>
+    <groupId>com.bitmechanic</groupId>
     <artifactId>dumbster</artifactId>
     <packaging>jar</packaging>
-    <version>1.9.0.2-SNAPSHOT</version>
+    <version>1.9.0.2</version>
 
     <name>Dumbster</name>
     <description>
          fake SMTP server
     </description>
 
-    <url>https://github.com/rjo1970/dumbster</url>
+    <url>https://github.com/coopernurse/dumbster</url>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
 
     <scm>
-        <url>https://github.com/rjo1970/dumbster</url>
-        <connection>scm:git:https://github.com/rjo1970/dumbster.git</connection>
-        <developerConnection>scm:git:${githubUserAndHost}:rjo1970/dumbster.git</developerConnection>
+        <connection>scm:git:git@github.com:coopernurse/dumbster.git</connection>
+        <developerConnection>scm:git:git@github.com:coopernurse/dumbster.git</developerConnection>
+        <url>git@github.com:coopernurse/dumbster.git</url>
     </scm>
+
+    <developers>
+        <developer>
+            <id>coopernurse</id>
+            <name>James Cooper</name>
+            <email>james@bitmechanic.com</email>
+        </developer>
+    </developers>
 
     <licenses>
         <license>
@@ -32,7 +46,7 @@
     <!--
         the following's required to even make the deploy task start; use altDeploymentRepository.
     -->
-    <distributionManagement>
+    <!-- <distributionManagement>
         <repository>
             <id>repo</id>
             <name>Repository Name</name>
@@ -46,10 +60,10 @@
 
         <site>
             <id>github-project-site</id>
-            <url>gitsite:${githubUserAndHost}/rjo1970/dumbster</url>
+            <url>gitsite:${githubUserAndHost}/coopernurse/dumbster</url>
         </site>
     </distributionManagement>
-
+ -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -252,5 +266,58 @@
                 <githubUserAndHost>github_tun</githubUserAndHost>
             </properties>
         </profile>
+
+        <profile>
+            <id>release-sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.1</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
     </profiles>
 </project>
