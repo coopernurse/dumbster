@@ -37,6 +37,7 @@ public class SmtpServerTest {
     private final String SERVER = "localhost";
     private final String FROM = "sender@here.com";
     private final String TO = "receiver@there.com";
+    private final String BCC = "bcc@there.com";
     private final String SUBJECT = "Test";
     private final String BODY = "Test Body";
     private final String FileName = "license.txt";
@@ -252,12 +253,33 @@ public class SmtpServerTest {
         return mailProps;
     }
 
+    @Test
+    public void testMessageShouldIncludeDumbsterRecipientsHeader() {
+        sendMessage(SMTP_PORT, this.FROM, this.SUBJECT, this.BODY, this.TO, this.BCC);
+        this.server.anticipateMessageCountFor(1, this.WAIT_TICKS);
+        assertTrue(this.server.getEmailCount() == 1);
+        MailMessage email = this.server.getMessage(0);
+        assertEquals("Test", email.getFirstHeaderValue("Subject"));
+        assertEquals("Test Body", email.getBody());
+        assertEquals(this.TO, email.getFirstHeaderValue("To"));
+        assertEquals("<" + this.TO + ">", email.getFirstHeaderValue(ClientSession.DUMBSTER_ALL_RECIPIENTS_HEADER));
+        assertEquals(2, email.getHeaderValues(ClientSession.DUMBSTER_ALL_RECIPIENTS_HEADER).length);
+        assertEquals("<" + this.BCC + ">", email.getHeaderValues(ClientSession.DUMBSTER_ALL_RECIPIENTS_HEADER)[1]);
+    }
+
     private void sendMessage(int port, String from, String subject, String body, String to) {
+        sendMessage(port, from, subject, body, to, null);
+    }
+
+    private void sendMessage(int port, String from, String subject, String body, String to, String bcc) {
         try {
             Properties mailProps = getMailProperties(port);
             Session session = Session.getInstance(mailProps, null);
 
             MimeMessage msg = createMessage(session, from, to, subject, body);
+            if (bcc != null) {
+            	msg.addRecipient(Message.RecipientType.BCC, new InternetAddress(bcc));
+            }
             Transport.send(msg);
         } catch (Exception e) {
             e.printStackTrace();

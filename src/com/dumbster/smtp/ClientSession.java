@@ -6,6 +6,8 @@ import java.io.PrintWriter;
 
 public class ClientSession implements Runnable {
 
+    protected static final String DUMBSTER_ALL_RECIPIENTS_HEADER = "DumbsterAllRecipients";
+
     private IOSource socket;
     private volatile MailStore mailStore;
     private MailMessage msg;
@@ -98,6 +100,10 @@ public class ClientSession implements Runnable {
         String params = request.getParams();
         if (null == params)
             return;
+
+        if (SmtpState.RCPT == request.getState()) {
+            addDataHeader(DUMBSTER_ALL_RECIPIENTS_HEADER + ":" + params);
+        }
 
         if (SmtpState.DATA_HDR.equals(smtpResponse.getNextState())) {
             addDataHeader(params);
