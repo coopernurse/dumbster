@@ -6,7 +6,7 @@
     <groupId>com.bitmechanic</groupId>
     <artifactId>dumbster</artifactId>
     <packaging>jar</packaging>
-    <version>1.9.0.2</version>
+    <version>1.9.0.3-SNAPSHOT</version>
 
     <name>Dumbster</name>
     <description>
@@ -71,6 +71,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.12</version>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

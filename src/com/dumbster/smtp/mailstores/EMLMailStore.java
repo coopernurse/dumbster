@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.dumbster.smtp.MailMessage;
 import com.dumbster.smtp.MailStore;
 import com.dumbster.smtp.eml.EMLMailMessage;
@@ -20,6 +23,7 @@ import com.dumbster.smtp.eml.EMLMailMessage;
  */
 public class EMLMailStore implements MailStore {
 
+	private final Logger logger = LoggerFactory.getLogger(EMLMailStore.class);
     private boolean initialized;
     private int count = 0;
     private File directory = new File("eml_store");
@@ -59,7 +63,7 @@ public class EMLMailStore implements MailStore {
     private File[] loadMessageFiles() {
         File[] files = this.directory.listFiles(new EMLFilenameFilter());
         if (files == null) {
-            System.err.println("Unable to load messages from eml mailStore directory: " + directory);
+            logger.error("Unable to load messages from eml mailStore directory: " + directory);
             return new File[0];
         }
         return files;
@@ -83,11 +87,11 @@ public class EMLMailStore implements MailStore {
         count++;
         messages.add(message);
 
-        System.out.println("Received message: " + count);
+        logger.info("Received message: " + count);
 
         try {
             if (!directory.exists()) {
-                System.out.println("Directory created: " + directory);
+            	logger.info("Directory created: " + directory);
                 directory.mkdirs();
             }
             String filename = getFilename(message, count);
@@ -111,8 +115,7 @@ public class EMLMailStore implements MailStore {
             writer.close();
 
         } catch (Exception e) {
-            System.err.println(e.getMessage());
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 

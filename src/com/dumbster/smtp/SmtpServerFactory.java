@@ -1,11 +1,17 @@
 package com.dumbster.smtp;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * User: rj
  * Date: Aug 28, 2011
  * Time: 6:48:14 AM
  */
 public class SmtpServerFactory {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(SmtpServerFactory.class);
+	
     public static SmtpServer startServer() {
         ServerOptions serverOptions = new ServerOptions();
         return startServer(serverOptions);
@@ -15,7 +21,7 @@ public class SmtpServerFactory {
         SmtpServer server = wireUpServer(options);
         wrapInShutdownHook(server);
         startServerThread(server);
-        System.out.println("Dumbster SMTP Server started on port " + options.port + ".\n");
+        LOGGER.info("Dumbster SMTP Server started on port " + options.port + ".\n");
         return server;
     }
 
@@ -29,10 +35,11 @@ public class SmtpServerFactory {
 
     private static void wrapInShutdownHook(final SmtpServer server) {
         Runtime.getRuntime().addShutdownHook(new Thread() {
-            public void run() {
+            @Override
+			public void run() {
                 server.stop();
-                System.out.println("\nDumbster SMTP Server stopped");
-                System.out.println("\tTotal messages received: " + server.getEmailCount());
+                LOGGER.info("\nDumbster SMTP Server stopped");
+                LOGGER.info("\tTotal messages received: " + server.getEmailCount());
             }
          });
     }
