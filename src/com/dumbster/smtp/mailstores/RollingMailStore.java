@@ -12,7 +12,7 @@ import com.dumbster.smtp.MailStore;
 
 public class RollingMailStore implements MailStore {
 
-	private final Logger logger = LoggerFactory.getLogger(RollingMailStore.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RollingMailStore.class);
     private List<MailMessage> receivedMail;
 
     public RollingMailStore() {
@@ -20,13 +20,13 @@ public class RollingMailStore implements MailStore {
     }
 
     @Override
-	public int getEmailCount() {
+    public int getEmailCount() {
         return receivedMail.size();
     }
 
     @Override
-	public void addMessage(MailMessage message) {
-    	logger.info("\n\nReceived message:\n" + message);
+    public void addMessage(MailMessage message) {
+        LOGGER.info("\n\nReceived message:\n" + message);
         receivedMail.add(message);
         if (getEmailCount() > 100) {
             receivedMail.remove(0);
@@ -34,12 +34,12 @@ public class RollingMailStore implements MailStore {
     }
 
     @Override
-	public MailMessage[] getMessages() {
+    public MailMessage[] getMessages() {
         return receivedMail.toArray(new MailMessage[receivedMail.size()]);
     }
 
     @Override
-	public MailMessage getMessage(int index) {
+    public MailMessage getMessage(int index) {
         return receivedMail.get(index);
     }
 

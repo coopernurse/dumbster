@@ -23,7 +23,7 @@ import com.dumbster.smtp.eml.EMLMailMessage;
  */
 public class EMLMailStore implements MailStore {
 
-	private final Logger logger = LoggerFactory.getLogger(EMLMailStore.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EMLMailStore.class);
     private boolean initialized;
     private int count = 0;
     private File directory = new File("eml_store");
@@ -63,7 +63,7 @@ public class EMLMailStore implements MailStore {
     private File[] loadMessageFiles() {
         File[] files = this.directory.listFiles(new EMLFilenameFilter());
         if (files == null) {
-            logger.error("Unable to load messages from eml mailStore directory: " + directory);
+            LOGGER.error("Unable to load messages from eml mailStore directory: " + directory);
             return new File[0];
         }
         return files;
@@ -87,11 +87,11 @@ public class EMLMailStore implements MailStore {
         count++;
         messages.add(message);
 
-        logger.info("Received message: " + count);
+        LOGGER.info("Received message: " + count);
 
         try {
             if (!directory.exists()) {
-            	logger.info("Directory created: " + directory);
+                LOGGER.info("Directory created: " + directory);
                 directory.mkdirs();
             }
             String filename = getFilename(message, count);
@@ -115,7 +115,7 @@ public class EMLMailStore implements MailStore {
             writer.close();
 
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 

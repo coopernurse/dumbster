@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
  * Time: 6:48:14 AM
  */
 public class SmtpServerFactory {
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(SmtpServerFactory.class);
-	
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(SmtpServerFactory.class);
+    
     public static SmtpServer startServer() {
         ServerOptions serverOptions = new ServerOptions();
         return startServer(serverOptions);
@@ -36,7 +36,7 @@ public class SmtpServerFactory {
     private static void wrapInShutdownHook(final SmtpServer server) {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
-			public void run() {
+            public void run() {
                 server.stop();
                 LOGGER.info("\nDumbster SMTP Server stopped");
                 LOGGER.info("\tTotal messages received: " + server.getEmailCount());
