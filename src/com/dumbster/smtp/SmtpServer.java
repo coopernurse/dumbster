@@ -36,6 +36,7 @@ public class SmtpServer implements Runnable {
     private volatile boolean threaded = false;
 
     private ServerSocket serverSocket;
+    private List<Socket> clients = new ArrayList<Socket>();
     private int port;
 
     public void run() {
@@ -78,6 +79,7 @@ public class SmtpServer implements Runnable {
             }
             SocketWrapper source = new SocketWrapper(clientSocket);
             ClientSession session = new ClientSession(source, mailStore);
+            clients.add(clientSocket);
             threadExecutor.execute(session);
         }
         threadExecutor.shutdown();
@@ -108,6 +110,16 @@ public class SmtpServer implements Runnable {
         } catch (IOException e) {
             throw new SmtpServerException(e);
         }
+        
+        for (Socket client : clients) {
+            try {
+                if (!client.isClosed()) {
+                    client.close();
+                }
+            } catch (IOException e) {
+                throw new SmtpServerException(e);
+            }
+        }        
     }
 
     public static class SmtpServerException extends RuntimeException {
